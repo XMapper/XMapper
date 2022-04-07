@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32328.378
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XMapper", "XMapper\XMapper.csproj", "{ED6413CD-00D4-4A54-A9FE-CCE4FC6CD7DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XMapper.Tests", "XMapper.Tests\XMapper.Tests.csproj", "{E0B2CD89-47AD-4CB0-AC02-1E0B31D7A31D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ED6413CD-00D4-4A54-A9FE-CCE4FC6CD7DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED6413CD-00D4-4A54-A9FE-CCE4FC6CD7DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED6413CD-00D4-4A54-A9FE-CCE4FC6CD7DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED6413CD-00D4-4A54-A9FE-CCE4FC6CD7DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0B2CD89-47AD-4CB0-AC02-1E0B31D7A31D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0B2CD89-47AD-4CB0-AC02-1E0B31D7A31D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0B2CD89-47AD-4CB0-AC02-1E0B31D7A31D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0B2CD89-47AD-4CB0-AC02-1E0B31D7A31D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5F8A7710-CA2A-4DCE-B143-D2C42A37F371}
+	EndGlobalSection
+EndGlobal
