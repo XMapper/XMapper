@@ -24,4 +24,8 @@
     <ProjectReference Include="..\XMapper\XMapper.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\_\Repos\XMapper\XMapper.Tests\.editorconfig" />
+  </ItemGroup>
+
 </Project>

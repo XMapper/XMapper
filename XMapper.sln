@@ -3,9 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XMapper", "XMapper\XMapper.csproj", "{ED6413CD-00D4-4A54-A9FE-CCE4FC6CD7DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XMapper", "XMapper\XMapper.csproj", "{ED6413CD-00D4-4A54-A9FE-CCE4FC6CD7DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XMapper.Tests", "XMapper.Tests\XMapper.Tests.csproj", "{E0B2CD89-47AD-4CB0-AC02-1E0B31D7A31D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XMapper.Tests", "XMapper.Tests\XMapper.Tests.csproj", "{E0B2CD89-47AD-4CB0-AC02-1E0B31D7A31D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{37E4FF85-C1F2-4C25-A2C7-C16D333A0FEE}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
