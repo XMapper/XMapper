@@ -8,6 +8,20 @@ public class XMapper<TSource, TTarget> where TTarget : new()
     private readonly UsePropertyListOf _propertyListToUse;
     public readonly List<PropertyInfo> _propertyInfos;
     private readonly List<Action<TSource, TTarget>> _memberMappingActions = new();
+
+    /// <summary>
+    /// Create a mapper that can be used for mappings from <see cref="TSource"/> to <see cref="TTarget"/>.
+    /// <para>Choose an <paramref name="initialPropertyList"/> (<see cref="UsePropertyListOf.Source"/> or <see cref="UsePropertyListOf.Target"/>): which <see cref="ValueType"/> and <see cref="string"/> properties do you want to map by name? You'll probably want to choose the class that has fewer <see cref="ValueType"/> and <see cref="string"/> properties.<br />
+    /// Then use fluent notation for the next parts:<br />
+    /// Use <see cref="IgnoreSourceProperty"/><br /> 
+    /// or <see cref="IgnoreTargetProperty"/><br /> 
+    /// - to ignore properties from that list or<br /> 
+    /// - to do custom mappings via <see cref="IncludeCustomAction"/>.<br /> 
+    /// For including reference type properties in the mapping, use <see cref="IncludeReferenceTypeProperty"/>.</para>
+    /// </summary>
+    /// <typeparam name="TSource">The object to get property values from.</typeparam>
+    /// <typeparam name="TTarget">The object that needs its properties to be set.</typeparam>
+    /// <param name="initialPropertyList"></param>
     public XMapper(UsePropertyListOf initialPropertyList)
     {
         _propertyListToUse = initialPropertyList;
@@ -18,7 +32,7 @@ public class XMapper<TSource, TTarget> where TTarget : new()
     }
 
     /// <summary>
-    /// Select a property that you don't want to map. Note: only to use in case of <see cref="UsePropertyListOf.Source"/>.
+    /// Only to use in case of <see cref="UsePropertyListOf.Source"/>. By default for all of <see cref="TSource"/>'s <see cref="ValueType"/> and <see cref="string"/> properties an automatic mapping attempt is made (by equal name). If <see cref="TTarget"/> does not have a matching property, you should ignore it here. You can include a custom mapping via <see cref="IncludeCustomAction"/>.
     /// </summary>
     public XMapper<TSource, TTarget> IgnoreSourceProperty<TProp>(Expression<Func<TSource, TProp>> propertySelector)
     {
@@ -31,7 +45,7 @@ public class XMapper<TSource, TTarget> where TTarget : new()
     }
 
     /// <summary>
-    /// Select a property that you don't want to map. Note: only to use in case of <see cref="UsePropertyListOf.Target"/>.
+    /// Only to use in case of <see cref="UsePropertyListOf.Target"/>. By default for all of <see cref="TTarget"/>'s <see cref="ValueType"/> and <see cref="string"/> properties an automatic mapping attempt is made (by equal name). If <see cref="TSource"/> does not have a matching property, you should ignore it here. You can include a custom mapping via <see cref="IncludeCustomAction"/>.
     /// </summary>
     public XMapper<TSource, TTarget> IgnoreTargetProperty<TProp>(Expression<Func<TTarget, TProp>> propertySelector)
     {
@@ -43,6 +57,9 @@ public class XMapper<TSource, TTarget> where TTarget : new()
         return this;
     }
 
+    /// <summary>
+    /// The Map method for an existing <see cref="TTarget"/>.
+    /// </summary>
     public void Map(TSource source, TTarget target)
     {
         if (target == null)
@@ -82,6 +99,9 @@ public class XMapper<TSource, TTarget> where TTarget : new()
         }
     }
 
+    /// <summary>
+    /// The Map method that constructs a new <see cref="TTarget"/>.
+    /// </summary>
     public TTarget Map(TSource source)
     {
         var target = new TTarget();
@@ -89,10 +109,13 @@ public class XMapper<TSource, TTarget> where TTarget : new()
         return target;
     }
 
-    public XMapper<TSource, TTarget> RegisterPropertyMapper<TSourceProp, TTargetProp>(
+    /// <summary>
+    /// Reference type properties are ignored by default, but you can include their <see cref="XMapper{TSourceProp, TTargetProp}"/> to have them mapped.
+    /// </summary>
+    public XMapper<TSource, TTarget> IncludeReferenceTypeProperty<TSourceProp, TTargetProp>(
         Expression<Func<TSource, TSourceProp>> sourcePropertySelector,
         Expression<Func<TTarget, TTargetProp>> targetPropertySelector,
-        XMapper<TSourceProp, TTargetProp> memberMapper) where TTargetProp : new()
+        XMapper<TSourceProp, TTargetProp> referenceTypeMemberMapper) where TTargetProp : new()
     {
         var sourcePropertyInfo = (PropertyInfo)((MemberExpression)sourcePropertySelector.Body).Member;
         var targetPropertyInfo = (PropertyInfo)((MemberExpression)targetPropertySelector.Body).Member;
@@ -111,15 +134,24 @@ public class XMapper<TSource, TTarget> where TTarget : new()
                     targetPropertyInstance = new TTargetProp();
                     targetPropertyInfo.SetValue(target, targetPropertyInstance);
                 }
-                memberMapper.Map(sourcePropertyValue, targetPropertyInstance);
+                referenceTypeMemberMapper.Map(sourcePropertyValue, targetPropertyInstance);
             }
         });
+        return this;
+    }
+
+    /// <summary>
+    /// If (<see cref="ValueType"/> or <see cref="string"/>) properties should not be mapped automatically, you can define a custom mapping here (and ignore the automatic mapping attempt via <see cref="IgnoreSourceProperty"/> or <see cref="IgnoreTargetProperty"/>).
+    /// </summary>
+    public XMapper<TSource, TTarget> IncludeCustomAction(Action<TSource, TTarget> customIncludeAction)
+    {
+        _memberMappingActions.Add(customIncludeAction);
         return this;
     }
 }
 
 /// <summary>
-/// You'll probably want to choose the class that has fewer <see cref="ValueType"/> and <see cref="string"/> properties: <see cref="{TSource}"/> or <see cref="{TTarget}"/>? Then use one of the Ignore methods for properties that your don't want to map automatically from that PropertyList."/>
+/// Which properties do you want to map by name? You'll probably want to choose the class that has fewer <see cref="ValueType"/> and <see cref="string"/> properties. Then use <see cref="XMapper{TSource, TTarget}.IgnoreSourceProperty"/> or <see cref="XMapper{TSource, TTarget}.IgnoreTargetProperty"/> for properties that your don't want to map automatically (by name) from that PropertyList.
 /// </summary>
 public enum UsePropertyListOf
 {
