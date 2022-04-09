@@ -7,6 +7,7 @@ public class XMapper<TSource, TTarget> where TTarget : new()
 {
     private readonly UsePropertyListOf _propertyListToUse;
     public readonly List<PropertyInfo> _propertyInfos;
+    private readonly List<Action<TSource, TTarget>> _memberMappingActions = new();
     public XMapper(UsePropertyListOf initialPropertyList)
     {
         _propertyListToUse = initialPropertyList;
@@ -44,6 +45,11 @@ public class XMapper<TSource, TTarget> where TTarget : new()
 
     public void Map(TSource source, TTarget target)
     {
+        if (target == null)
+        {
+            throw new ArgumentNullException(nameof(target));
+        }
+
         if (_propertyListToUse == UsePropertyListOf.Source)
         {
             SourceListMap(source, target);
@@ -52,6 +58,8 @@ public class XMapper<TSource, TTarget> where TTarget : new()
         {
             TargetListMap(source, target);
         }
+
+        _memberMappingActions.ForEach(action => action(source, target));
     }
 
     private void SourceListMap(TSource source, TTarget target)
@@ -79,6 +87,34 @@ public class XMapper<TSource, TTarget> where TTarget : new()
         var target = new TTarget();
         Map(source, target);
         return target;
+    }
+
+    public XMapper<TSource, TTarget> RegisterPropertyMapper<TSourceProp, TTargetProp>(
+        Expression<Func<TSource, TSourceProp>> sourcePropertySelector,
+        Expression<Func<TTarget, TTargetProp>> targetPropertySelector,
+        XMapper<TSourceProp, TTargetProp> memberMapper) where TTargetProp : new()
+    {
+        var sourcePropertyInfo = (PropertyInfo)((MemberExpression)sourcePropertySelector.Body).Member;
+        var targetPropertyInfo = (PropertyInfo)((MemberExpression)targetPropertySelector.Body).Member;
+        _memberMappingActions.Add((source, target) =>
+        {
+            var sourcePropertyValue = (TSourceProp?)sourcePropertyInfo.GetValue(source);
+            if (sourcePropertyValue == null)
+            {
+                targetPropertyInfo.SetValue(target, null);
+            }
+            else
+            {
+                var targetPropertyInstance = ((TTargetProp?)targetPropertyInfo.GetValue(target));
+                if (targetPropertyInstance == null)
+                {
+                    targetPropertyInstance = new TTargetProp();
+                    targetPropertyInfo.SetValue(target, targetPropertyInstance);
+                }
+                memberMapper.Map(sourcePropertyValue, targetPropertyInstance);
+            }
+        });
+        return this;
     }
 }
 
