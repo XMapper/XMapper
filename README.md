@@ -4,8 +4,12 @@ The object-to-object mapper for C# that can be setup in a readable one-liner. No
 <p align="center">
     <img src="https://avatars.githubusercontent.com/u/103217522?s=150&v=4" alt="XMapper logo"/>
 </p>
+Available via NuGet.
 
 ## Examples
+```csharp
+using XMapper;
+```
 
 ### Map to new
 ```csharp

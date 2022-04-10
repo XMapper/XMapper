@@ -1,20 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<PackageVersion>1.0.0-alpha</PackageVersion>
-    <TargetFramework>net6.0</TargetFramework>
+	<PackageVersion>1.0.0</PackageVersion>
+    <TargetFramework>net5.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
-    <Version>1.0.0-alpha</Version>
+    <Version>1.0.0</Version>
     <Description>The object-to-object mapper for C# that can be setup in a readable one-liner. No Attributes, no configuration - just write intuitive and safe code that works immediately.</Description>
     <PackageProjectUrl></PackageProjectUrl>
     <PackageIcon>X.png</PackageIcon>
     <RepositoryUrl>https://github.com/xmapper/xmapper</RepositoryUrl>
-    <PackageTags>object; mapper; automapper; xmapper; object-to-object; objects; property; properties; member; members; mapping; c#; .net; Mapster; </PackageTags>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
+    <PackageTags>automapper; Mapster; xmapper; object; mapper; object-to-object; objects; property; properties; member; members; mapping; c#; .net; </PackageTags>
+    <AssemblyVersion>1.0.0.1</AssemblyVersion>
+    <FileVersion>1.0.0.1</FileVersion>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <AnalysisLevel>latest</AnalysisLevel>
   </PropertyGroup>
 
   <ItemGroup>
