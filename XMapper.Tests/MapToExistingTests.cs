@@ -11,7 +11,7 @@ public class MapToExistingTests
         var source = new Dummy1 { XString = s, XNullableInt = ni, XInt = i, XNullableString = ns, XEnum = e, XNullableEnum = ne };
         var target = new Dummy2();
 
-        var mapper = new XMapper<Dummy1, Dummy2>(UsePropertyListOf.Source);
+        var mapper = new XMapper<Dummy1, Dummy2>(PropertyList.Source);
         mapper.Map(source, target);
 
         Assert.Equal(s, target.XString);
@@ -30,7 +30,7 @@ public class MapToExistingTests
         var source = new Dummy1 { XString = s, XNullableInt = ni, XInt = i, XNullableString = ns, XEnum = e, XNullableEnum = ne };
         var target = new Dummy2();
 
-        var mapper = new XMapper<Dummy1, Dummy2>(UsePropertyListOf.Target)
+        var mapper = new XMapper<Dummy1, Dummy2>(PropertyList.Target)
             .IgnoreTargetProperty(x => x.XNullableString2);
         mapper.Map(source, target);
 

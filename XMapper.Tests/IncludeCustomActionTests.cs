@@ -11,9 +11,9 @@ public class IncludeCustomActionTests
         var dummy1 = new Dummy1 { XNullableEnum = DummyEnum.One, XNullableInt = 2, XString = "Map me!" };
         var dummy2 = new Dummy2 { XNullableEnum = ne, XNullableInt = 1 };
 
-        var mapper = new XMapper<Dummy1, Dummy2>(UsePropertyListOf.Source)
+        var mapper = new XMapper<Dummy1, Dummy2>(PropertyList.Source)
             .IgnoreSourceProperty(x => x.XNullableEnum)
-            .IncludeCustomAction((source, target) =>
+            .IncludeAction((source, target) =>
             {
                 if (target.XNullableEnum == null)
                 {

@@ -41,8 +41,8 @@ public class IncludeReferenceTypePropertyTests
             XNullableString = "Mapped",
         };
 
-        var mapper = new XMapper<Dummy4, Dummy5>(UsePropertyListOf.Target)
-            .IncludeReferenceTypeProperty(s => s.XDummy1, t => t.XDummy2, new XMapper<Dummy1?, Dummy2?>(UsePropertyListOf.Source));
+        var mapper = new XMapper<Dummy4, Dummy5>(PropertyList.Target)
+            .IncludeReferenceTypeProperty(s => s.XDummy1, t => t.XDummy2, new XMapper<Dummy1?, Dummy2?>(PropertyList.Source));
 
         Dummy5 dummy5;
         switch (testTarget)

@@ -8,7 +8,7 @@ public class IgnoreTests
     [Fact]
     public void IgnoreSourceProperty()
     {
-        var mapper = new XMapper<Dummy1, Dummy2>(UsePropertyListOf.Source)
+        var mapper = new XMapper<Dummy1, Dummy2>(PropertyList.Source)
             .IgnoreSourceProperty(x => x.XNullableInt)
             .IgnoreSourceProperty(x => x.XString)
             .IgnoreSourceProperty(x => x.XEnum)
@@ -25,7 +25,7 @@ public class IgnoreTests
     [Fact]
     public void IgnoreTargetProperty()
     {
-        var mapper = new XMapper<Dummy1, Dummy2>(UsePropertyListOf.Target)
+        var mapper = new XMapper<Dummy1, Dummy2>(PropertyList.Target)
             .IgnoreTargetProperty(x => x.XNullableInt)
             .IgnoreTargetProperty(x => x.XString)
             .IgnoreTargetProperty(x => x.XEnum)

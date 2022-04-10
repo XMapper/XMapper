@@ -8,7 +8,7 @@ public class InitialPropertyListTests
     [Fact]
     public void SourceProperties_Dummy1()
     {
-        var mapper = new XMapper<Dummy1, Dummy2>(UsePropertyListOf.Source);
+        var mapper = new XMapper<Dummy1, Dummy2>(PropertyList.Source);
         var propertyNames = mapper._propertyInfos.OrderBy(x => x.Name).Select(x => x.Name);
 
         Assert.Equal(new[]
@@ -25,7 +25,7 @@ public class InitialPropertyListTests
     [Fact]
     public void SourceProperties_Dummy3()
     {
-        var mapper = new XMapper<Dummy3, Dummy2>(UsePropertyListOf.Source);
+        var mapper = new XMapper<Dummy3, Dummy2>(PropertyList.Source);
         var propertyInfo = Assert.Single(mapper._propertyInfos);
         Assert.Equal(nameof(Dummy3.XNullableString), propertyInfo.Name);
     }
@@ -33,7 +33,7 @@ public class InitialPropertyListTests
     [Fact]
     public void TargetProperties_Dummy2()
     {
-        var mapper = new XMapper<Dummy1, Dummy2>(UsePropertyListOf.Target);
+        var mapper = new XMapper<Dummy1, Dummy2>(PropertyList.Target);
         var propertyNames = mapper._propertyInfos.OrderBy(x => x.Name).Select(x => x.Name);
 
         Assert.Equal(new[]
@@ -51,7 +51,7 @@ public class InitialPropertyListTests
     [Fact]
     public void TargetProperties_Dummy3()
     {
-        var mapper = new XMapper<Dummy1, Dummy3>(UsePropertyListOf.Target);
+        var mapper = new XMapper<Dummy1, Dummy3>(PropertyList.Target);
         var propertyInfo = Assert.Single(mapper._propertyInfos);
         Assert.Equal(nameof(Dummy3.XNullableString), propertyInfo.Name);
     }
