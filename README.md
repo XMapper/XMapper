@@ -1,6 +1,9 @@
 # XMapper
 
 The object-to-object mapper for C# that can be setup in a readable one-liner. No Attributes, no configuration - just write intuitive and safe code that works immediately.
+<p align="center">
+    <img src="https://avatars.githubusercontent.com/u/103217522?s=150&v=4" alt="XMapper logo"/>
+</p>
 
 ## Examples
 
