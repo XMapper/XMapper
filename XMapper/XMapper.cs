@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace XMapper;
 
-public class XMapper<TSource, TTarget> where TTarget : new()
+public class XMapper<TSource, TTarget> where TTarget : class, new()
 {
     private readonly PropertyList _propertyListToUse;
     public readonly List<PropertyInfo> _propertyInfos;
@@ -17,7 +17,7 @@ public class XMapper<TSource, TTarget> where TTarget : new()
     /// or <see cref="IgnoreTargetProperty"/><br /> 
     /// - to ignore properties from that list or<br /> 
     /// - to do custom mappings via <see cref="IncludeAction"/>.<br /> 
-    /// For including reference type properties in the mapping, use <see cref="IncludeReferenceTypeProperty"/>.</para>
+    /// For including reference type properties in the mapping, also use <see cref="IncludeAction"/> with another <see cref="XMapper{TSource, TTarget}"/>.</para>
     /// </summary>
     /// <typeparam name="TSource">The object to get property values from.</typeparam>
     /// <typeparam name="TTarget">The object that needs its properties to be set.</typeparam>
@@ -110,42 +110,11 @@ public class XMapper<TSource, TTarget> where TTarget : new()
     }
 
     /// <summary>
-    /// Reference type properties are ignored by default, but you can include their <see cref="XMapper{TSourceProp, TTargetProp}"/> to have them mapped.
-    /// </summary>
-    public XMapper<TSource, TTarget> IncludeReferenceTypeProperty<TSourceProp, TTargetProp>(
-        Expression<Func<TSource, TSourceProp>> sourcePropertySelector,
-        Expression<Func<TTarget, TTargetProp>> targetPropertySelector,
-        XMapper<TSourceProp, TTargetProp> referenceTypeMemberMapper) where TTargetProp : new()
-    {
-        var sourcePropertyInfo = (PropertyInfo)((MemberExpression)sourcePropertySelector.Body).Member;
-        var targetPropertyInfo = (PropertyInfo)((MemberExpression)targetPropertySelector.Body).Member;
-        _includeActions.Add((source, target) =>
-        {
-            var sourcePropertyValue = (TSourceProp?)sourcePropertyInfo.GetValue(source);
-            if (sourcePropertyValue == null)
-            {
-                targetPropertyInfo.SetValue(target, null);
-            }
-            else
-            {
-                var targetPropertyInstance = ((TTargetProp?)targetPropertyInfo.GetValue(target));
-                if (targetPropertyInstance == null)
-                {
-                    targetPropertyInstance = new TTargetProp();
-                    targetPropertyInfo.SetValue(target, targetPropertyInstance);
-                }
-                referenceTypeMemberMapper.Map(sourcePropertyValue, targetPropertyInstance);
-            }
-        });
-        return this;
-    }
-
-    /// <summary>
     /// If (<see cref="ValueType"/> or <see cref="string"/>) properties should not be mapped automatically, you can define a custom mapping here. Ignore the automatic mapping attempt via <see cref="IgnoreSourceProperty"/> or <see cref="IgnoreTargetProperty"/>.
     /// </summary>
-    public XMapper<TSource, TTarget> IncludeAction(Action<TSource, TTarget> customIncludeAction)
+    public XMapper<TSource, TTarget> IncludeAction(Action<TSource, TTarget> includeAction)
     {
-        _includeActions.Add(customIncludeAction);
+        _includeActions.Add(includeAction);
         return this;
     }
 }

@@ -1,15 +1,15 @@
 ﻿using Xunit;
 
 namespace XMapper.Tests;
-public class IncludeCustomActionTests
+public class IncludeValueTypeViaCustomMappingTests
 {
     [Theory]
     [InlineData(null)]
     [InlineData(DummyEnum.None)]
     public void DependingOnCondition(DummyEnum? ne)
     {
-        var dummy1 = new Dummy1 { XNullableEnum = DummyEnum.One, XNullableInt = 2, XString = "Map me!" };
-        var dummy2 = new Dummy2 { XNullableEnum = ne, XNullableInt = 1 };
+        var d1 = new Dummy1 { XNullableEnum = DummyEnum.One, XNullableInt = 2, XString = "Map me!" };
+        var d2 = new Dummy2 { XNullableEnum = ne, XNullableInt = 1 };
 
         var mapper = new XMapper<Dummy1, Dummy2>(PropertyList.Source)
             .IgnoreSourceProperty(x => x.XNullableEnum)
@@ -21,10 +21,10 @@ public class IncludeCustomActionTests
                 }
             });
 
-        mapper.Map(dummy1, dummy2);
+        mapper.Map(d1, d2);
 
-        Assert.Equal(ne == null ? dummy1.XNullableEnum : ne, dummy2.XNullableEnum);
-        Assert.Equal(2, dummy2.XNullableInt);
-        Assert.Equal(dummy1.XString, dummy2.XString);
+        Assert.Equal(ne == null ? d1.XNullableEnum : ne, d2.XNullableEnum);
+        Assert.Equal(2, d2.XNullableInt);
+        Assert.Equal(d1.XString, d2.XString);
     }
 }

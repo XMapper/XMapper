@@ -1,17 +1,16 @@
 ﻿using Xunit;
 
 namespace XMapper.Tests;
-public class IncludeReferenceTypePropertyTests
+public class IncludeNonEnumerableReferenceTypeMemberTests
 {
-    public class Dummy4
+    public class DummyA
     {
         public Dummy1? XDummy1 { get; set; }
         public string? XNullableString { get; set; }
         public int? XNullableInt { get; set; }
-
     }
 
-    public class Dummy5
+    public class DummyB
     {
         public Dummy2? XDummy2 { get; set; }
         public string? XNullableString { get; set; }
@@ -24,9 +23,9 @@ public class IncludeReferenceTypePropertyTests
     [InlineData(false, TestTarget.IsNull)]
     [InlineData(false, TestTarget.HasNullReference)]
     [InlineData(false, TestTarget.HasInstance)]
-    public void IncludeReferenceTypeProperty(bool sourceHasNullReference, TestTarget testTarget)
+    public void NonEnumerableReferenceTypeMember(bool sourceHasNullReference, TestTarget testTarget)
     {
-        var dummy4 = new Dummy4
+        var dA = new DummyA
         {
             XDummy1 = sourceHasNullReference ? null : new Dummy1
             {
@@ -41,39 +40,50 @@ public class IncludeReferenceTypePropertyTests
             XNullableString = "Mapped",
         };
 
-        var mapper = new XMapper<Dummy4, Dummy5>(PropertyList.Target)
-            .IncludeReferenceTypeProperty(s => s.XDummy1, t => t.XDummy2, new XMapper<Dummy1?, Dummy2?>(PropertyList.Source));
+        var d1Xd2 = new XMapper<Dummy1, Dummy2>(PropertyList.Source);
+        var mapper = new XMapper<DummyA, DummyB>(PropertyList.Target)
+            .IncludeAction((source, target) =>
+            {
+                if (source.XDummy1 == null)
+                {
+                    target.XDummy2 = null;
+                }
+                else
+                {
+                    d1Xd2.Map(source.XDummy1, target.XDummy2 ??= new());
+                }
+            });
 
-        Dummy5 dummy5;
+        DummyB dB;
         switch (testTarget)
         {
             case TestTarget.IsNull:
-                dummy5 = mapper.Map(dummy4);
+                dB = mapper.Map(dA);
                 break;
             case TestTarget.HasNullReference:
-                dummy5 = new Dummy5 { XDummy2 = null };
-                mapper.Map(dummy4, dummy5);
+                dB = new DummyB { XDummy2 = null };
+                mapper.Map(dA, dB);
                 break;
             case TestTarget.HasInstance:
             default:
-                dummy5 = new Dummy5 { XDummy2 = new() };
-                mapper.Map(dummy4, dummy5);
+                dB = new DummyB { XDummy2 = new() };
+                mapper.Map(dA, dB);
                 break;
         }
 
         if (sourceHasNullReference)
         {
-            Assert.Null(dummy5.XDummy2);
+            Assert.Null(dB.XDummy2);
         }
         else
         {
-            Assert.Equal(dummy4.XDummy1!.XEnum, dummy5.XDummy2!.XEnum);
-            Assert.Equal(dummy4.XDummy1.XInt, dummy5.XDummy2.XInt);
-            Assert.Equal(dummy4.XDummy1.XNullableString, dummy5.XDummy2.XNullableString);
-            Assert.Equal(dummy4.XDummy1.XNullableInt, dummy5.XDummy2.XNullableInt);
-            Assert.Equal(dummy4.XDummy1.XString, dummy5.XDummy2.XString);
+            Assert.Equal(dA.XDummy1!.XEnum, dB.XDummy2!.XEnum);
+            Assert.Equal(dA.XDummy1.XInt, dB.XDummy2.XInt);
+            Assert.Equal(dA.XDummy1.XNullableString, dB.XDummy2.XNullableString);
+            Assert.Equal(dA.XDummy1.XNullableInt, dB.XDummy2.XNullableInt);
+            Assert.Equal(dA.XDummy1.XString, dB.XDummy2.XString);
         }
-        Assert.Equal(dummy4.XNullableString, dummy5.XNullableString);
+        Assert.Equal(dA.XNullableString, dB.XNullableString);
     }
     public enum TestTarget
     {

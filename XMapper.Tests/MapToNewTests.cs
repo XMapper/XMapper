@@ -9,18 +9,18 @@ public class MapToNewTests
     [InlineData("", null, 0, null, DummyEnum.One, null)]
     public void MapAllToNew_SourceList(string s, int? ni, int i, string? ns, DummyEnum e, DummyEnum? ne)
     {
-        var dummy1 = new Dummy1 { XString = s, XNullableInt = ni, XInt = i, XNullableString = ns, XEnum = e, XNullableEnum = ne };
+        var d1 = new Dummy1 { XString = s, XNullableInt = ni, XInt = i, XNullableString = ns, XEnum = e, XNullableEnum = ne };
 
         var mapper = new XMapper<Dummy1, Dummy2>(PropertyList.Source);
 
-        var dummy2 = mapper.Map(dummy1);
+        var d2 = mapper.Map(d1);
 
-        Assert.Equal(s, dummy2.XString);
-        Assert.Equal(ni, dummy2.XNullableInt);
-        Assert.Equal(i, dummy2.XInt);
-        Assert.Equal(ns, dummy2.XNullableString);
-        Assert.Equal(e, dummy2.XEnum);
-        Assert.Equal(ne, dummy2.XNullableEnum);
+        Assert.Equal(s, d2.XString);
+        Assert.Equal(ni, d2.XNullableInt);
+        Assert.Equal(i, d2.XInt);
+        Assert.Equal(ns, d2.XNullableString);
+        Assert.Equal(e, d2.XEnum);
+        Assert.Equal(ne, d2.XNullableEnum);
     }
 
     [Theory]
@@ -28,18 +28,18 @@ public class MapToNewTests
     [InlineData("", null, 0, null, DummyEnum.One, null)]
     public void MapAllToNew_TargetList(string s, int? ni, int i, string? ns, DummyEnum e, DummyEnum? ne)
     {
-        var dummy1 = new Dummy1 { XString = s, XNullableInt = ni, XInt = i, XNullableString = ns, XEnum = e, XNullableEnum = ne };
+        var d1 = new Dummy1 { XString = s, XNullableInt = ni, XInt = i, XNullableString = ns, XEnum = e, XNullableEnum = ne };
 
         var mapper = new XMapper<Dummy1, Dummy2>(PropertyList.Target)
             .IgnoreTargetProperty(x => x.XNullableString2);
 
-        var dummy2 = mapper.Map(dummy1);
+        var d2 = mapper.Map(d1);
 
-        Assert.Equal(s, dummy2.XString);
-        Assert.Equal(ni, dummy2.XNullableInt);
-        Assert.Equal(i, dummy2.XInt);
-        Assert.Equal(ns, dummy2.XNullableString);
-        Assert.Equal(e, dummy2.XEnum);
-        Assert.Equal(ne, dummy2.XNullableEnum);
+        Assert.Equal(s, d2.XString);
+        Assert.Equal(ni, d2.XNullableInt);
+        Assert.Equal(i, d2.XInt);
+        Assert.Equal(ns, d2.XNullableString);
+        Assert.Equal(e, d2.XEnum);
+        Assert.Equal(ne, d2.XNullableEnum);
     }
 }
