@@ -10,7 +10,7 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <Description>The object-to-object mapper for C# that can be setup in a readable one-liner. No Attributes, no configuration - just write intuitive and safe code that works immediately.</Description>
-    <PackageProjectUrl></PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/XMapper</PackageProjectUrl>
     <PackageIcon>X.png</PackageIcon>
     <RepositoryUrl>https://github.com/xmapper/xmapper</RepositoryUrl>
     <PackageTags>automapper; Mapster; xmapper; object; mapper; object-to-object; objects; property; properties; member; members; mapping; c#; .net; </PackageTags>
@@ -18,6 +18,7 @@
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <AnalysisLevel>latest</AnalysisLevel>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <Copyright>XMapper</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
