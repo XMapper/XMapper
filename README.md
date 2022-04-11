@@ -31,14 +31,14 @@ var mapper = new XMapper<Dummy1, Dummy2>(PropertyList.Target)
 mapper.Map(d1, d2);
 ```
 
-### Map Enumerable members
-Enumerable with refernce type elements:
+### Map enumerable members
+Member is IEnumerable with reference type elements:
 ```csharp
 var d1Xd2 = new XMapper<Dummy1, Dummy2>(PropertyList.Source);
 var mapper = new XMapper<DummyA, DummyB>(PropertyList.Source)
     .IncludeAction((source, target) => target.Dummy2List = source.Dummy1Array?.Select(x => d1Xd2.Map(x)).ToList());
 ```
-Enumerable with ValueType elements:
+Member is IEnumerable with ValueType elements:
 ```csharp
 var mapper = new XMapper<DummyA, DummyB>(PropertyList.Source)
     .IncludeAction((source, target) => target.XIntList = source.XIntArray?.ToList());

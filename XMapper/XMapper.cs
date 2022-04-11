@@ -3,6 +3,9 @@ using System.Reflection;
 
 namespace XMapper;
 
+/// <summary>
+/// Create an instance of this class to create a mapper. See the constructor for more guidance.
+/// </summary>
 public class XMapper<TSource, TTarget> where TTarget : class, new()
 {
     private readonly PropertyList _propertyListToUse;
@@ -19,9 +22,6 @@ public class XMapper<TSource, TTarget> where TTarget : class, new()
     /// - to do custom mappings via <see cref="IncludeAction"/>.<br /> 
     /// For including reference type properties in the mapping, also use <see cref="IncludeAction"/> with another <see cref="XMapper{TSource, TTarget}"/>.</para>
     /// </summary>
-    /// <typeparam name="TSource">The object to get property values from.</typeparam>
-    /// <typeparam name="TTarget">The object that needs its properties to be set.</typeparam>
-    /// <param name="initialPropertyList"></param>
     public XMapper(PropertyList initialPropertyList)
     {
         _propertyListToUse = initialPropertyList;
@@ -110,7 +110,8 @@ public class XMapper<TSource, TTarget> where TTarget : class, new()
     }
 
     /// <summary>
-    /// If (<see cref="ValueType"/> or <see cref="string"/>) properties should not be mapped automatically, you can define a custom mapping here. Ignore the automatic mapping attempt via <see cref="IgnoreSourceProperty"/> or <see cref="IgnoreTargetProperty"/>.
+    /// - If (<see cref="ValueType"/> or <see cref="string"/>) properties should not be mapped automatically, you can define a custom mapping here. Ignore the automatic mapping attempt via <see cref="IgnoreSourceProperty"/> or <see cref="IgnoreTargetProperty"/>.<br/>
+    /// - For including reference type properties in the mapping, your can also use this method. For better performance, initialize the member mapper outside of this method (assuming your intention is to re-use mappers for better execution times).
     /// </summary>
     public XMapper<TSource, TTarget> IncludeAction(Action<TSource, TTarget> includeAction)
     {
@@ -120,10 +121,22 @@ public class XMapper<TSource, TTarget> where TTarget : class, new()
 }
 
 /// <summary>
-/// <para>Choose an initial property list (<see cref="PropertyList.Source"/> or <see cref="PropertyList.Target"/>): which <see cref="ValueType"/> and <see cref="string"/> properties do you want to map by name? You'll probably want to choose the class that has fewer properties.<br />
+/// Choose an initial property list (<see cref="PropertyList.Source"/> or <see cref="PropertyList.Target"/>): which <see cref="ValueType"/> and <see cref="string"/> properties do you want to map by name? You'll probably want to choose the class that has fewer properties.
 /// </summary>
 public enum PropertyList
 {
+    /// <summary>
+    /// Take the property list of the source object and automatically map from these properties.<br/>
+    /// Optionally use <see cref="XMapper{TSource, TTarget}.IgnoreSourceProperty"/> and <see cref="XMapper{TSource, TTarget}.IncludeAction"/> for custom mapping.<br/>
+    /// Note that only <see cref="ValueType"/> and <see cref="string"/> property types can be mapped automatically by name.<br/>
+    /// For including reference type properties, also use <see cref="XMapper{TSource, TTarget}.IncludeAction"/> but then for a call to <see cref="XMapper{TSource, TTarget}.Map(TSource, TTarget)"/>.
+    /// </summary>
     Source,
+    /// <summary>
+    /// Take the property list of the target object and automatically map to these properties.<br/>
+    /// Optionally use <see cref="XMapper{TSource, TTarget}.IgnoreTargetProperty"/> and <see cref="XMapper{TSource, TTarget}.IncludeAction"/> for custom mapping.<br/>
+    /// Note that only <see cref="ValueType"/> and <see cref="string"/> property types can be mapped automatically by name.<br/>
+    /// For including reference type properties, also use <see cref="XMapper{TSource, TTarget}.IncludeAction"/> but then for a call to <see cref="XMapper{TSource, TTarget}.Map(TSource, TTarget)"/>.
+    /// </summary>
     Target
 }
