@@ -4,7 +4,8 @@ The object-to-object mapper for C# that can be setup in a readable one-liner. No
 <p align="center">
     <img src="https://avatars.githubusercontent.com/u/103217522?s=150&v=4" alt="XMapper logo"/>
 </p>
-Available via NuGet. (Also check out [XMapper.Testing](https://github.com/XMapper/XMapper.Testing).)
+
+Available via NuGet.
 
 ## Examples
 ```csharp
@@ -84,3 +85,7 @@ var mapper = new XMapper<Dummy1, Dummy2>(PropertyList.Source)
 
 mapper.Map(d1, d2);
 ```
+
+## Testing
+
+Automate the testing of all your object-to-object mappers with one line of unit test code via [XMapper.Testing](https://github.com/XMapper/XMapper.Testing).
