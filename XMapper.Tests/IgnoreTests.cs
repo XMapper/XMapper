@@ -1,10 +1,17 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using Xunit;
 
 namespace XMapper.Tests;
 
 public class IgnoreTests
 {
+    private static List<PropertyInfo> GetPrivatePropertyInfos(object mapper)
+    {
+        return (List<PropertyInfo>)mapper.GetType().GetRuntimeFields().First(x => x.Name == "_propertyInfos").GetValue(mapper)!;
+    }
+
     [Fact]
     public void IgnoreSourceProperty()
     {
@@ -13,7 +20,7 @@ public class IgnoreTests
             .IgnoreSourceProperty(x => x.XString)
             .IgnoreSourceProperty(x => x.XEnum)
             .IgnoreSourceProperty(x => x.XNullableEnum);
-        var propertyNames = mapper._propertyInfos.OrderBy(x => x.Name).Select(x => x.Name);
+        var propertyNames = GetPrivatePropertyInfos(mapper).OrderBy(x => x.Name).Select(x => x.Name);
 
         Assert.Equal(new[]
         {
@@ -30,7 +37,7 @@ public class IgnoreTests
             .IgnoreTargetProperty(x => x.XString)
             .IgnoreTargetProperty(x => x.XEnum)
             .IgnoreTargetProperty(x => x.XNullableEnum);
-        var propertyNames = mapper._propertyInfos.OrderBy(x => x.Name).Select(x => x.Name);
+        var propertyNames = GetPrivatePropertyInfos(mapper).OrderBy(x => x.Name).Select(x => x.Name);
 
         Assert.Equal(new[]
         {

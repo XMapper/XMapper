@@ -1,15 +1,22 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using Xunit;
 
 namespace XMapper.Tests;
 
 public class InitialPropertyListTests
 {
+    private static List<PropertyInfo> GetPrivatePropertyInfos(object mapper)
+    {
+        return (List<PropertyInfo>)mapper.GetType().GetRuntimeFields().First(x => x.Name == "_propertyInfos").GetValue(mapper)!;
+    }
+
     [Fact]
     public void SourceProperties_Dummy1()
     {
         var mapper = new XMapper<Dummy1, Dummy2>(PropertyList.Source);
-        var propertyNames = mapper._propertyInfos.OrderBy(x => x.Name).Select(x => x.Name);
+        var propertyNames = GetPrivatePropertyInfos(mapper).OrderBy(x => x.Name).Select(x => x.Name);
 
         Assert.Equal(new[]
         {
@@ -26,7 +33,7 @@ public class InitialPropertyListTests
     public void SourceProperties_Dummy3()
     {
         var mapper = new XMapper<Dummy3, Dummy2>(PropertyList.Source);
-        var propertyInfo = Assert.Single(mapper._propertyInfos);
+        var propertyInfo = Assert.Single(GetPrivatePropertyInfos(mapper));
         Assert.Equal(nameof(Dummy3.XNullableString), propertyInfo.Name);
     }
 
@@ -34,7 +41,7 @@ public class InitialPropertyListTests
     public void TargetProperties_Dummy2()
     {
         var mapper = new XMapper<Dummy1, Dummy2>(PropertyList.Target);
-        var propertyNames = mapper._propertyInfos.OrderBy(x => x.Name).Select(x => x.Name);
+        var propertyNames = GetPrivatePropertyInfos(mapper).OrderBy(x => x.Name).Select(x => x.Name);
 
         Assert.Equal(new[]
         {
@@ -52,7 +59,7 @@ public class InitialPropertyListTests
     public void TargetProperties_Dummy3()
     {
         var mapper = new XMapper<Dummy1, Dummy3>(PropertyList.Target);
-        var propertyInfo = Assert.Single(mapper._propertyInfos);
+        var propertyInfo = Assert.Single(GetPrivatePropertyInfos(mapper));
         Assert.Equal(nameof(Dummy3.XNullableString), propertyInfo.Name);
     }
 }

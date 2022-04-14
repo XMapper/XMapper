@@ -6,14 +6,14 @@ namespace XMapper;
 /// <summary>
 /// Create an instance of this class to create a mapper. See the constructor for more guidance.
 /// </summary>
-public class XMapper<TSource, TTarget> where TTarget : class, new()
+public class XMapper<TSource, TTarget> where TSource : class, new() where TTarget : class, new()
 {
-    private readonly PropertyList _propertyListToUse;
-    public readonly List<PropertyInfo> _propertyInfos;
+    private readonly PropertyList _propertyList;
+    private readonly List<PropertyInfo> _propertyInfos;
     private readonly List<Action<TSource, TTarget>> _includeActions = new();
 
     /// <summary>
-    /// Create a mapper that can be used for mappings from <see cref="TSource"/> to <see cref="TTarget"/>.
+    /// Create a mapper that can be used for mappings from <typeparamref name="TSource"/> to <typeparamref name="TTarget"/>.
     /// <para>Choose an <paramref name="initialPropertyList"/> (<see cref="PropertyList.Source"/> or <see cref="PropertyList.Target"/>): which <see cref="ValueType"/> and <see cref="string"/> properties do you want to map by name? You'll probably choose the class that has fewer properties.<br />
     /// Then use fluent notation for the next parts:<br />
     /// Use <see cref="IgnoreSourceProperty"/><br /> 
@@ -24,19 +24,19 @@ public class XMapper<TSource, TTarget> where TTarget : class, new()
     /// </summary>
     public XMapper(PropertyList initialPropertyList)
     {
-        _propertyListToUse = initialPropertyList;
-        _propertyInfos = (_propertyListToUse == PropertyList.Source ? typeof(TSource) : typeof(TTarget))
+        _propertyList = initialPropertyList;
+        _propertyInfos = (_propertyList == PropertyList.Source ? typeof(TSource) : typeof(TTarget))
             .GetProperties()
             .Where(x => x.PropertyType.IsValueType || x.PropertyType == typeof(string))
             .ToList();
     }
 
     /// <summary>
-    /// Only to use in case of <see cref="PropertyList.Source"/>. By default for all of <see cref="TSource"/>'s <see cref="ValueType"/> and <see cref="string"/> properties an automatic mapping attempt is made (by equal name). If <see cref="TTarget"/> does not have a matching property, you should ignore it here. You can include a custom mapping via <see cref="IncludeAction"/>.
+    /// Only to use in case of <see cref="PropertyList.Source"/>. By default for all of <typeparamref name="TSource"/>'s <see cref="ValueType"/> and <see cref="string"/> properties an automatic mapping attempt is made (by equal name). If <typeparamref name="TTarget"/> does not have a matching property, you should ignore it here. You can include a custom mapping via <see cref="IncludeAction"/>.
     /// </summary>
     public XMapper<TSource, TTarget> IgnoreSourceProperty<TProp>(Expression<Func<TSource, TProp>> propertySelector)
     {
-        if (_propertyListToUse == PropertyList.Target)
+        if (_propertyList == PropertyList.Target)
         {
             throw new Exception($"Use {nameof(IgnoreTargetProperty)} if {nameof(PropertyList)} is {nameof(PropertyList.Target)}.");
         }
@@ -45,11 +45,11 @@ public class XMapper<TSource, TTarget> where TTarget : class, new()
     }
 
     /// <summary>
-    /// Only to use in case of <see cref="PropertyList.Target"/>. By default for all of <see cref="TTarget"/>'s <see cref="ValueType"/> and <see cref="string"/> properties an automatic mapping attempt is made (by equal name). If <see cref="TSource"/> does not have a matching property, you should ignore it here. You can include a custom mapping via <see cref="IncludeAction"/>.
+    /// Only to use in case of <see cref="PropertyList.Target"/>. By default for all of <typeparamref name="TTarget"/>'s <see cref="ValueType"/> and <see cref="string"/> properties an automatic mapping attempt is made (by equal name). If <typeparamref name="TSource"/> does not have a matching property, you should ignore it here. You can include a custom mapping via <see cref="IncludeAction"/>.
     /// </summary>
     public XMapper<TSource, TTarget> IgnoreTargetProperty<TProp>(Expression<Func<TTarget, TProp>> propertySelector)
     {
-        if (_propertyListToUse == PropertyList.Source)
+        if (_propertyList == PropertyList.Source)
         {
             throw new Exception($"Use {nameof(IgnoreSourceProperty)} if {nameof(PropertyList)} is {nameof(PropertyList.Source)}.");
         }
@@ -58,7 +58,7 @@ public class XMapper<TSource, TTarget> where TTarget : class, new()
     }
 
     /// <summary>
-    /// The Map method for an existing <see cref="TTarget"/>.
+    /// The Map method for an existing <typeparamref name="TTarget"/>.
     /// </summary>
     public void Map(TSource source, TTarget target)
     {
@@ -67,7 +67,7 @@ public class XMapper<TSource, TTarget> where TTarget : class, new()
             throw new ArgumentNullException(nameof(target));
         }
 
-        if (_propertyListToUse == PropertyList.Source)
+        if (_propertyList == PropertyList.Source)
         {
             SourceListMap(source, target);
         }
@@ -85,7 +85,12 @@ public class XMapper<TSource, TTarget> where TTarget : class, new()
         foreach (var sourcePropertyInfo in _propertyInfos)
         {
             var targetPropertyInfo = targetType.GetProperty(sourcePropertyInfo.Name) ?? throw new Exception($"Property '{sourcePropertyInfo.Name}' was not found on {nameof(target)}.");
-            targetPropertyInfo.SetValue(target, sourcePropertyInfo.GetValue(source));
+            var value = sourcePropertyInfo.GetValue(source);
+            if (value == null && targetPropertyInfo.PropertyType.IsValueType && Nullable.GetUnderlyingType(targetPropertyInfo.PropertyType) == null)
+            {
+                throw new Exception($"'{typeof(TSource).Name}.{sourcePropertyInfo.Name}' was null, but '{typeof(TTarget).Name}.{targetPropertyInfo.Name}' is not nullable.");
+            }
+            targetPropertyInfo.SetValue(target, value);
         }
     }
 
@@ -95,12 +100,17 @@ public class XMapper<TSource, TTarget> where TTarget : class, new()
         foreach (var targetPropertyInfo in _propertyInfos)
         {
             var sourcePropertyInfo = sourceType.GetProperty(targetPropertyInfo.Name) ?? throw new Exception($"Property '{targetPropertyInfo.Name}' was not found on {nameof(source)}.");
-            targetPropertyInfo.SetValue(target, sourcePropertyInfo.GetValue(source));
+            var value = sourcePropertyInfo.GetValue(source);
+            if (value == null && targetPropertyInfo.PropertyType.IsValueType && Nullable.GetUnderlyingType(targetPropertyInfo.PropertyType) == null)
+            {
+                throw new Exception($"'{typeof(TSource).Name}.{sourcePropertyInfo.Name}' was null, but '{typeof(TTarget).Name}.{targetPropertyInfo.Name}' is not nullable.");
+            }
+            targetPropertyInfo.SetValue(target, value);
         }
     }
 
     /// <summary>
-    /// The Map method that constructs a new <see cref="TTarget"/>.
+    /// The Map method that constructs a new <typeparamref name="TTarget"/>.
     /// </summary>
     public TTarget Map(TSource source)
     {
