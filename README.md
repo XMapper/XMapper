@@ -16,7 +16,7 @@ These are all the public methods:
 - `IncludeAction`
 - `Map` (2 overloads)
 
-Note: hovering over `XMapper` and its methods in your editor will provide guiding documentation.
+Hovering over `XMapper` and its methods in your editor will provide guiding documentation.
 
 ## Examples
 ```csharp
