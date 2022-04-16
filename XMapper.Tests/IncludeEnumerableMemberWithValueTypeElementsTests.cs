@@ -22,7 +22,7 @@ public class IncludeEnumerableMemberWithValueTypeElementsTests
     [InlineData(true, false)]
     [InlineData(false, false)]
     [InlineData(false, true)]
-    public void IncludeEnumerableMemberWithReferenceTypeElements(bool sourceHasNullReference, bool targetExists)
+    public void IncludeEnumerableMemberWithValueTypeElements(bool sourceHasNullReference, bool targetExists)
     {
         var dA = new DummyA
         {

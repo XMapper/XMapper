@@ -1,3 +1,9 @@
+## [2.0.1] 2022-04-16
+
+- Improvements in the documentation that is available on hovering over the `XMapper` class or its methods.
+- Better error messages.
+
+
 ## [2.0.0] 2022-04-14
 
 ### Changed
