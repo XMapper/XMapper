@@ -8,7 +8,8 @@ The object-to-object mapper for C# that can be setup in a readable one-liner. No
 Available via NuGet.
 
 ## Introduction
-There's only one class in this package: `XMapper<TSource, TTarget>`. It has a single parameter of type `PropertyList`.<br />
+There's only one class in this package: `XMapper<TSource, TTarget>`. It has a single parameter of type `PropertyList`.
+
 These are all the public methods:
 
 - `IgnoreSourceProperty`
