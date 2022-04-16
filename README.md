@@ -9,7 +9,7 @@ Available via NuGet.
 
 ## Introduction
 There's only one class in this package: `XMapper<TSource, TTarget>`. It has a single parameter of type `PropertyList`.<br />
-These are all `XMapper`'s public methods:
+These are all the public methods:
 
 - `IgnoreSourceProperty`
 - `IgnoreTargetProperty`
