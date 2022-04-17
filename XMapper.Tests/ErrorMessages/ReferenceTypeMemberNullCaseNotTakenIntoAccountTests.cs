@@ -23,6 +23,7 @@ public class ReferenceTypeMemberNullCaseNotTakenIntoAccountTests
     {
         var mXm = new XMapper<MemberA, MemberB>(PropertyList.Target);
         var mapper = new XMapper<DummyA, DummyB>(PropertyList.Target)
+            .IgnoreTargetProperty(x => x.TheMember)
             .IncludeAction((source, target) => mXm.Map(source.TheMember!, target.TheMember!));
 
         var source = new DummyA { TheMember = new() };
@@ -38,6 +39,7 @@ public class ReferenceTypeMemberNullCaseNotTakenIntoAccountTests
     {
         var mXm = new XMapper<MemberA, MemberB>(PropertyList.Target);
         var mapper = new XMapper<DummyA, DummyB>(PropertyList.Target)
+            .IgnoreTargetProperty(x => x.TheMember)
             .IncludeAction((source, target) => mXm.Map(source.TheMember!, target.TheMember ??= new()));
 
         var source = new DummyA { TheMember = null };
@@ -53,6 +55,7 @@ public class ReferenceTypeMemberNullCaseNotTakenIntoAccountTests
     {
         var mXm = new XMapper<MemberA, MemberB>(PropertyList.Target);
         var mapper = new XMapper<DummyA, DummyB>(PropertyList.Target)
+            .IgnoreTargetProperty(x => x.TheMember)
             .IncludeAction((source, target) =>
             {
                 if (source.TheMember == null)
@@ -83,6 +86,7 @@ public class ReferenceTypeMemberNullCaseNotTakenIntoAccountTests
     {
         var mXm = new XMapper<MemberA, MemberB>(PropertyList.Target);
         var mapper = new XMapper<DummyA, DummyB>(PropertyList.Target)
+            .IgnoreTargetProperty(x => x.TheMember)
             .IncludeAction((source, target) =>
             {
                 if (source.TheMember == null)

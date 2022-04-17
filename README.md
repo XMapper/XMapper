@@ -44,20 +44,34 @@ var mapper = new XMapper<Dummy1, Dummy2>(PropertyList.Target)
 mapper.Map(d1, d2);
 ```
 
-### Map enumerable members
-Member is IEnumerable with reference type elements:
+### Custom mapping of ValueTypes
+```csharp
+var d1 = new Dummy1 { ... };
+var d2 = new Dummy2 { ... };
+
+var mapper = new XMapper<Dummy1, Dummy2>(PropertyList.Source)
+    .IgnoreSourceProperty(x => x.MyInt)
+    .IncludeAction((source, target) => target.MyInt = target.MyEnum > someValue ? null : target.MyInt = source.Number * 10);
+
+mapper.Map(d1, d2);
+```
+
+### Map enumerable members to another target type
+From Array to List with reference type elements:
 ```csharp
 var d1Xd2 = new XMapper<Dummy1, Dummy2>(PropertyList.Source);
 var mapper = new XMapper<DummyA, DummyB>(PropertyList.Source)
+    .IgnoreSourceProperty(x => x.Dummy1Array)
     .IncludeAction((source, target) => target.Dummy2List = source.Dummy1Array?.Select(x => d1Xd2.Map(x)).ToList());
 ```
-Member is IEnumerable with ValueType elements:
+From Array to List with ValueType elements:
 ```csharp
 var mapper = new XMapper<DummyA, DummyB>(PropertyList.Source)
+    .IgnoreSourceProperty(x => x.XIntArray)
     .IncludeAction((source, target) => target.XIntList = source.XIntArray?.ToList());
 ```
 
-### Map non-enumerable reference type members
+### Map non-enumerable reference type members to another target type
 ```csharp
 var dummyA = new DummyA
 {
@@ -70,6 +84,7 @@ var dummyA = new DummyA
 
 var d1Xd2 = new XMapper<Dummy1, Dummy2>(PropertyList.Source);
 var mapper = new XMapper<DummyA, DummyB>(PropertyList.Target)
+    .IgnoreTargetProperty(x => x.Dummy2Property)
     .IncludeAction((dummyA, dummyB) =>
     {
         if (dummyA.Dummy1Property == null)
@@ -84,18 +99,6 @@ var mapper = new XMapper<DummyA, DummyB>(PropertyList.Target)
 
 var dummyB = mapper.Map(dummyA);
 var dummy2 = dummyB.Dummy2Property
-```
-
-### Custom mapping of ValueTypes
-```csharp
-var d1 = new Dummy1 { ... };
-var d2 = new Dummy2 { ... };
-
-var mapper = new XMapper<Dummy1, Dummy2>(PropertyList.Source)
-    .IgnoreSourceProperty(x => x.MyInt)
-    .IncludeAction((source, target) => target.MyInt = target.MyEnum > someValue ? null : target.MyInt = source.Number * 10);
-
-mapper.Map(d1, d2);
 ```
 
 ## Testing

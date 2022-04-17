@@ -1,17 +1,53 @@
-﻿using Xunit;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Xunit;
 
 namespace XMapper.Tests;
 public class MapToExistingTests
 {
+    public class Dummy1
+    {
+        public string XString { get; set; } = "";
+        public string? XNullableString { get; set; }
+        public int XInt { get; set; }
+        public int? XNullableInt { get; set; }
+        public DummyEnum XEnum { get; set; }
+        public DummyEnum? XNullableEnum { get; set; }
+
+
+        public Type? XType { get; set; }
+        public IEnumerable<int> XEnumerable { get; set; } = Enumerable.Empty<int>();
+    }
+
+    public class Dummy2
+    {
+        public string XString { get; set; } = "";
+        public string? XNullableString { get; set; }
+        public string? XNullableString2 { get; set; }
+        public int XInt { get; set; }
+        public int? XNullableInt { get; set; }
+        public DummyEnum XEnum { get; set; }
+        public DummyEnum? XNullableEnum { get; set; }
+    }
+
+    public enum DummyEnum
+    {
+        None,
+        One,
+    }
+
     [Theory]
     [InlineData("X1", 3, 5, "X2", DummyEnum.None, DummyEnum.One)]
     [InlineData("", null, 5, null, DummyEnum.One, null)]
-    public void MapAllToExisting_SourceList(string s, int? ni, int i, string? ns, DummyEnum e, DummyEnum? ne)
+    public void SourceList(string s, int? ni, int i, string? ns, DummyEnum e, DummyEnum? ne)
     {
         var d1 = new Dummy1 { XString = s, XNullableInt = ni, XInt = i, XNullableString = ns, XEnum = e, XNullableEnum = ne };
         var d2 = new Dummy2();
 
-        var mapper = new XMapper<Dummy1, Dummy2>(PropertyList.Source);
+        var mapper = new XMapper<Dummy1, Dummy2>(PropertyList.Source)
+            .IgnoreSourceProperty(x => x.XType)
+            .IgnoreSourceProperty(x => x.XEnumerable);
         mapper.Map(d1, d2);
 
         Assert.Equal(s, d2.XString);
@@ -25,7 +61,7 @@ public class MapToExistingTests
     [Theory]
     [InlineData("X1", 3, 5, "X2", DummyEnum.None, DummyEnum.One)]
     [InlineData("", null, 5, null, DummyEnum.One, null)]
-    public void MapAllToExisting_TargetList(string s, int? ni, int i, string? ns, DummyEnum e, DummyEnum? ne)
+    public void TargetList(string s, int? ni, int i, string? ns, DummyEnum e, DummyEnum? ne)
     {
         var d1 = new Dummy1 { XString = s, XNullableInt = ni, XInt = i, XNullableString = ns, XEnum = e, XNullableEnum = ne };
         var d2 = new Dummy2();

@@ -40,6 +40,7 @@ public class UseMappersFromStaticFieldsTest
     {
         var mXm = new XMapper<MemberA, MemberB>(PropertyList.Target);
         var mapper = new XMapper<DummyA, DummyB>(PropertyList.Target)
+            .IgnoreTargetProperty(x => x.TheMember)
             .IncludeAction((source, target) =>
             {
                 if (source.TheMember == null)

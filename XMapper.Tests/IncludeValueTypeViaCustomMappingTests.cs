@@ -3,15 +3,35 @@
 namespace XMapper.Tests;
 public class IncludeValueTypeViaCustomMappingTests
 {
+    public class DummyA
+    {
+        public string XString { get; set; } = "";
+        public int? XNullableInt { get; set; }
+        public DummyEnum? XNullableEnum { get; set; }
+    }
+
+    public class DummyB
+    {
+        public string XString { get; set; } = "";
+        public int? XNullableInt { get; set; }
+        public DummyEnum? XNullableEnum { get; set; }
+    }
+
+    public enum DummyEnum
+    {
+        None,
+        One,
+    }
+
     [Theory]
     [InlineData(null)]
     [InlineData(DummyEnum.None)]
     public void DependingOnCondition(DummyEnum? ne)
     {
-        var d1 = new Dummy1 { XNullableEnum = DummyEnum.One, XNullableInt = 2, XString = "Map me!" };
-        var d2 = new Dummy2 { XNullableEnum = ne, XNullableInt = 1 };
+        var dA = new DummyA { XNullableEnum = DummyEnum.One, XNullableInt = 2, XString = "Map me!" };
+        var dB = new DummyB { XNullableEnum = ne, XNullableInt = 1 };
 
-        var mapper = new XMapper<Dummy1, Dummy2>(PropertyList.Source)
+        var mapper = new XMapper<DummyA, DummyB>(PropertyList.Source)
             .IgnoreSourceProperty(x => x.XNullableEnum)
             .IncludeAction((source, target) =>
             {
@@ -21,10 +41,10 @@ public class IncludeValueTypeViaCustomMappingTests
                 }
             });
 
-        mapper.Map(d1, d2);
+        mapper.Map(dA, dB);
 
-        Assert.Equal(ne == null ? d1.XNullableEnum : ne, d2.XNullableEnum);
-        Assert.Equal(2, d2.XNullableInt);
-        Assert.Equal(d1.XString, d2.XString);
+        Assert.Equal(ne == null ? dA.XNullableEnum : ne, dB.XNullableEnum);
+        Assert.Equal(2, dB.XNullableInt);
+        Assert.Equal(dA.XString, dB.XString);
     }
 }

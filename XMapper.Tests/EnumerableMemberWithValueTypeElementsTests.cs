@@ -3,7 +3,7 @@ using System.Linq;
 using Xunit;
 
 namespace XMapper.Tests;
-public class IncludeEnumerableMemberWithValueTypeElementsTests
+public class EnumerableMemberWithValueTypeElementsTests
 {
     public class DummyA
     {
@@ -22,7 +22,7 @@ public class IncludeEnumerableMemberWithValueTypeElementsTests
     [InlineData(true, false)]
     [InlineData(false, false)]
     [InlineData(false, true)]
-    public void IncludeEnumerableMemberWithValueTypeElements(bool sourceHasNullReference, bool targetExists)
+    public void ToDifferentEnumerableType(bool sourceHasNullReference, bool targetExists)
     {
         var dA = new DummyA
         {
@@ -31,6 +31,7 @@ public class IncludeEnumerableMemberWithValueTypeElementsTests
 
 
         var mapper = new XMapper<DummyA, DummyB>(PropertyList.Source)
+            .IgnoreSourceProperty(x => x.XIntArray)
             .IncludeAction((source, target) => target.XIntList = source.XIntArray?.ToList());
 
         DummyB dB;
@@ -54,5 +55,49 @@ public class IncludeEnumerableMemberWithValueTypeElementsTests
             Assert.Equal(1, element);
         }
         Assert.Equal(6, dB.XInt);
+    }
+
+    public class DummyC
+    {
+        public int XInt { get; set; } = 18;
+        public int[]? XIntArray { get; set; }
+    }
+
+    [Theory]
+    [InlineData(true, true)]
+    [InlineData(true, false)]
+    [InlineData(false, false)]
+    [InlineData(false, true)]
+    public void ToSameType(bool sourceHasNullReference, bool targetExists)
+    {
+        var dA = new DummyA
+        {
+            XIntArray = sourceHasNullReference ? null : new[] { 1 }
+        };
+
+
+        var mapper = new XMapper<DummyA, DummyC>(PropertyList.Source);
+
+        DummyC dC;
+        if (targetExists)
+        {
+            dC = new DummyC();
+            mapper.Map(dA, dC);
+        }
+        else
+        {
+            dC = mapper.Map(dA);
+        }
+
+        if (sourceHasNullReference)
+        {
+            Assert.Null(dC.XIntArray);
+        }
+        else
+        {
+            var element = Assert.Single(dC.XIntArray);
+            Assert.Equal(1, element);
+        }
+        Assert.Equal(6, dC.XInt);
     }
 }
