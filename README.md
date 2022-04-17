@@ -5,7 +5,7 @@ The object-to-object mapper for C# that can be setup in a readable one-liner. No
     <img src="https://avatars.githubusercontent.com/u/103217522?s=150&v=4" alt="XMapper logo"/>
 </p>
 
-Available via NuGet.
+Available via [NuGet](https://www.nuget.org/packages/XMapper).
 
 ## Introduction
 There's only one class in this package: `XMapper<TSource, TTarget>`. It has a single parameter of type `PropertyList`.
