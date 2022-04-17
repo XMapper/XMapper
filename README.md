@@ -51,7 +51,7 @@ var d2 = new Dummy2 { ... };
 
 var mapper = new XMapper<Dummy1, Dummy2>(PropertyList.Source)
     .IgnoreSourceProperty(x => x.MyInt)
-    .IncludeAction((source, target) => target.MyInt = target.MyEnum > someValue ? null : target.MyInt = source.Number * 10);
+    .IncludeAction((source, target) => target.MyInt = source.MyEnum > someValue ? null : source.Number * 10);
 
 mapper.Map(d1, d2);
 ```
