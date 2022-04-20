@@ -1,3 +1,7 @@
+## [3.0.1] 2022-04-20
+
+- Improve source code summaries.
+
 ## [3.0.0] 2022-04-17
 
 ### Breaking changes

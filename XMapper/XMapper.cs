@@ -7,10 +7,10 @@ namespace XMapper;
 /// Create a mapper that can be used for mappings from <typeparamref name="TSource"/> to <typeparamref name="TTarget"/>.
 /// <para>Choose a <see cref="PropertyList"/>  (<see cref="PropertyList.Source"/> or <see cref="PropertyList.Target"/>): which properties do you want to map automatically by name? You'll probably choose the class that has fewer properties.</para>
 /// <para>Use <see cref="IgnoreSourceProperty"/> or <see cref="IgnoreTargetProperty"/> to ignore properties from that list. You should ignore all properties that do not have a matching property name or type.</para>
-/// <para>For ignored properties, you can do custom mappings via <see cref="IncludeAction"/> (both value type or reference type). In case of reference types, you may need to nest another <see cref="XMapper{TSource, TTarget}"/> here.</para>
+/// <para>For ignored properties, you can do custom mappings via <see cref="IncludeAction"/> (for value types or reference types).</para>
 /// <para>
 /// Note 1: You can use fluent notation for all of this.<br />
-/// Note 2: For better performance you may want to assign the mapper to a static field (so that you can re-use it). If you're also mapping reference type members, then also assign those mappers to static fields.
+/// Note 2: For better performance you may want to assign the mapper to a static field (so that you can re-use it). If you're also mapping reference type members with their own mappers via <see cref="IncludeAction"/>, then also assign those mappers to static fields.
 /// </para>
 /// </summary>
 public class XMapper<TSource, TTarget> where TSource : class, new() where TTarget : class, new()
@@ -21,12 +21,12 @@ public class XMapper<TSource, TTarget> where TSource : class, new() where TTarge
 
     /// <summary>
     /// Create a mapper that can be used for mappings from <typeparamref name="TSource"/> to <typeparamref name="TTarget"/>.
-    /// <para>Choose a <paramref name="initialPropertyList"/>  (<see cref="PropertyList.Source"/> or <see cref="PropertyList.Target"/>): which properties do you want to map automatically by name? You'll probably choose the class that has fewer properties.</para>
+    /// <para>Choose an <paramref name="initialPropertyList"/>  (<see cref="PropertyList.Source"/> or <see cref="PropertyList.Target"/>): which properties do you want to map automatically by name? You'll probably choose the class that has fewer properties.</para>
     /// <para>Use <see cref="IgnoreSourceProperty"/> or <see cref="IgnoreTargetProperty"/> to ignore properties from that list. You should ignore all properties that do not have a matching property name or type.</para>
-    /// <para>For ignored properties, you can do custom mappings via <see cref="IncludeAction"/> (both value type or reference type). In case of reference types, you may need to nest another <see cref="XMapper{TSource, TTarget}"/> here.</para>
+    /// <para>For ignored properties, you can do custom mappings via <see cref="IncludeAction"/> (for value types or reference types).</para>
     /// <para>
     /// Note 1: You can use fluent notation for all of this.<br />
-    /// Note 2: For better performance you may want to assign the mapper to a static field (so that you can re-use it). If you're also mapping reference type members, then also assign those mappers to static fields.
+    /// Note 2: For better performance you may want to assign the mapper to a static field (so that you can re-use it). If you're also mapping reference type members with their own mappers via <see cref="IncludeAction"/>, then also assign those mappers to static fields.
     /// </para>
     /// </summary>
     public XMapper(PropertyList initialPropertyList)
@@ -65,8 +65,8 @@ public class XMapper<TSource, TTarget> where TSource : class, new() where TTarge
 
     /// <summary>
     /// For including custom mappings.
-    /// <para>For properties that you don't want to be mapped automatically you can define a custom mapping here. Ignore the automatic mapping attempt via <see cref="IgnoreSourceProperty"/> or <see cref="IgnoreTargetProperty"/>.</para>
-    /// <para>In case of reference type properties that have their own mapper: for better performance, initialize the member mapper outside of this method (assuming your intention is to re-use mappers for better execution times).</para>
+    /// <para>For properties that you don't want to be mapped automatically by name you can define a custom mapping here. Ignore the automatic mapping attempt via <see cref="IgnoreSourceProperty"/> or <see cref="IgnoreTargetProperty"/>.</para>
+    /// <para>In case of reference type properties that have their own mapper: for better performance, initialize the mapper outside of this method (assuming your intention is to re-use mappers for better execution times).</para>
     /// </summary>
     public XMapper<TSource, TTarget> IncludeAction(Action<TSource, TTarget> includeAction)
     {
