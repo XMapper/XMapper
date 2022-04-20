@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>3.0.0</Version>
+    <Version>3.0.1</Version>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
@@ -16,7 +16,7 @@
     <AnalysisLevel>latest</AnalysisLevel>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <Copyright>XMapper</Copyright>
-    <PackageReleaseNotes>See CHANGELOG.md at GitHub for release notes.</PackageReleaseNotes>
+    <PackageReleaseNotes>See https://github.com/XMapper/XMapper/blob/master/CHANGELOG.md for release notes.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
