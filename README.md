@@ -26,7 +26,12 @@ using XMapper;
 
 ### Map to new
 ```csharp
-var dummy1 = new Dummy1 { ... };
+var dummy1 = new Dummy1
+{
+    MyString = "All members with the same name and type can be copied automatically...",
+    MyIntArray = new [] { 2, 3, 5 },
+    MyObjectList = new List<MyObject> { new MyObject { Hello = "...even a list of objects!" }, new MyObject() },
+};
 
 var mapper = new XMapper<Dummy1, Dummy2>(PropertyList.Source);
 
@@ -35,8 +40,8 @@ var dummy2 = mapper.Map(dummy1);
 
 ### Map to exising
 ```csharp
-var d1 = new Dummy1 { ... };
-var d2 = new Dummy2 { ... };
+var d1 = new Dummy1 { SomeString = "I will be copied", Id = "I won't be copied" };
+var d2 = new Dummy2 { SomeString = "I will be overwritten", Id = "I will stay" };
 
 var mapper = new XMapper<Dummy1, Dummy2>(PropertyList.Target)
     .IgnoreTargetProperty(x => x.Id);
@@ -50,21 +55,27 @@ var d1 = new Dummy1 { ... };
 var d2 = new Dummy2 { ... };
 
 var mapper = new XMapper<Dummy1, Dummy2>(PropertyList.Source)
-    .IgnoreSourceProperty(x => x.MyInt)
-    .IncludeAction((source, target) => target.MyInt = source.MyEnum > someValue ? null : source.Number * 10);
+    .IgnoreSourceProperty(x => x.Number)
+    .IncludeAction((source, target) =>
+    {
+        if (target.MyInt != "An important value")
+        {
+            target.MyInt = source.Number * 10);
+        }
+    });
 
 mapper.Map(d1, d2);
 ```
 
 ### Map enumerable members to another target type
-From Array to List with reference type elements:
+From Array to Array with other reference type elements:
 ```csharp
 var d1Xd2 = new XMapper<Dummy1, Dummy2>(PropertyList.Source);
 var mapper = new XMapper<DummyA, DummyB>(PropertyList.Source)
     .IgnoreSourceProperty(x => x.Dummy1Array)
-    .IncludeAction((source, target) => target.Dummy2List = source.Dummy1Array?.Select(x => d1Xd2.Map(x)).ToList());
+    .IncludeAction((source, target) => target.Dummy2Array = source.Dummy1Array?.Select(x => d1Xd2.Map(x)).ToArray());
 ```
-From Array to List with ValueType elements:
+From Array to List:
 ```csharp
 var mapper = new XMapper<DummyA, DummyB>(PropertyList.Source)
     .IgnoreSourceProperty(x => x.XIntArray)
@@ -98,7 +109,35 @@ var mapper = new XMapper<DummyA, DummyB>(PropertyList.Target)
     });
 
 var dummyB = mapper.Map(dummyA);
-var dummy2 = dummyB.Dummy2Property
+var dummy2 = dummyB.Dummy2Property;
+```
+
+### Map just a few properties from a reference typed member
+```csharp
+var dummyA = new DummyA
+{
+    ...
+    Dummy1Property = new Dummy1
+    {
+        Name = "Not DummyA, but Dummy1",
+        Address = "Deep",
+        ...
+    },
+    ...
+};
+
+var mapper = new XMapper<DummyA, DummyB>(PropertyList.Target)
+    .IgnoreTargetProperty(x => x.Name)
+    .IgnoreTargetProperty(x => x.Address)
+    .IncludeAction((source, target) =>
+    {
+        target.Name = source.Dummy1Property.Name;
+        target.Address = source.Dummy1Property.Address;
+    });
+
+var dummyB = mapper.Map(dummyA);
+var name = dummyB.Name;
+
 ```
 
 ## Testing

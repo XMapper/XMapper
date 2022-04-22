@@ -11,18 +11,17 @@ public class NullableReferenceTypeToNotNullableReferenceType
 
     public class DummyB
     {
-        public MemberB TheMember { get; set; } = new();
+        public MemberA TheMember { get; set; } = new();
     }
 
     public class MemberA { }
-    public class MemberB { }
 
     [Theory]
     [InlineData(PropertyList.Source)]
     [InlineData(PropertyList.Target)]
     public void Test(PropertyList propertyList)
     {
-        var mXm = new XMapper<MemberA, MemberB>(propertyList);
+        var mXm = new XMapper<MemberA, MemberA>(propertyList);
         var mapper = new XMapper<DummyA, DummyB>(propertyList)
             .IncludeAction((source, target) =>
             {

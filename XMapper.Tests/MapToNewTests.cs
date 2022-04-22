@@ -18,7 +18,9 @@ public class MapToNewTests
 
 
         public Type? XType { get; set; }
+        public Type? AnotherType { get; set; } = typeof(int);
         public IEnumerable<int> XEnumerable { get; set; } = Enumerable.Empty<int>();
+        public int[] XIntArray { get; set; } = new[] { 2, 3, 5 };
     }
 
     public class Dummy2
@@ -30,6 +32,9 @@ public class MapToNewTests
         public int? XNullableInt { get; set; }
         public DummyEnum XEnum { get; set; }
         public DummyEnum? XNullableEnum { get; set; }
+
+        public Type? AnotherType { get; set; }
+        public int[] XIntArray { get; set; } = Array.Empty<int>();
     }
 
     public enum DummyEnum
@@ -57,6 +62,8 @@ public class MapToNewTests
         Assert.Equal(ns, d2.XNullableString);
         Assert.Equal(e, d2.XEnum);
         Assert.Equal(ne, d2.XNullableEnum);
+        Assert.Equal(typeof(int), d2.AnotherType);
+        Assert.Equal(new[] { 2, 3, 5 }, d2.XIntArray);
     }
 
     [Theory]
@@ -77,5 +84,7 @@ public class MapToNewTests
         Assert.Equal(ns, d2.XNullableString);
         Assert.Equal(e, d2.XEnum);
         Assert.Equal(ne, d2.XNullableEnum);
+        Assert.Equal(typeof(int), d2.AnotherType);
+        Assert.Equal(new[] { 2, 3, 5 }, d2.XIntArray);
     }
 }

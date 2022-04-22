@@ -132,6 +132,12 @@ public class XMapper<TSource, TTarget> where TSource : class, new() where TTarge
 
     private static void MapPropertyValue(TSource source, TTarget target, PropertyInfo sourcePropertyInfo, PropertyInfo targetPropertyInfo)
     {
+        var sourcePropertyType = Nullable.GetUnderlyingType(sourcePropertyInfo.PropertyType) ?? sourcePropertyInfo.PropertyType;
+        var targetPropertyType = Nullable.GetUnderlyingType(targetPropertyInfo.PropertyType) ?? targetPropertyInfo.PropertyType;
+        if (sourcePropertyType != targetPropertyType)
+        {
+            throw new Exception($"'{typeof(TSource).Name}.{sourcePropertyInfo.Name}' is of type '{sourcePropertyType}', but '{typeof(TTarget).Name}.{targetPropertyInfo.Name}' is of type '{targetPropertyType}'.");
+        }
         var value = sourcePropertyInfo.GetValue(source);
         if (value == null && (
             targetPropertyInfo.PropertyType.IsValueType && Nullable.GetUnderlyingType(targetPropertyInfo.PropertyType) == null
