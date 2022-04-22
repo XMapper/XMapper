@@ -7,6 +7,8 @@ The object-to-object mapper for C# that can be setup in a readable one-liner. No
 
 Available via [NuGet](https://www.nuget.org/packages/XMapper).
 
+Automate the testing of all your object-to-object mappers with one line of unit test code via [XMapper.Testing](https://github.com/XMapper/XMapper.Testing).
+
 ## Introduction
 There's only one class in this package: `XMapper<TSource, TTarget>`. It has a single parameter of type `PropertyList`.
 
@@ -139,7 +141,3 @@ var dummyB = mapper.Map(dummyA);
 var name = dummyB.Name;
 
 ```
-
-## Testing
-
-Automate the testing of all your object-to-object mappers with one line of unit test code via [XMapper.Testing](https://github.com/XMapper/XMapper.Testing).
