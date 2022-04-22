@@ -1,3 +1,7 @@
+## [3.0.2] 2022-04-22
+
+- Also provide property name(s) in case of a type mismatch exception: `'DummyA.P' is of type 'System.String', but 'DummyB.P' is of type 'System.Int32'.` (instead of `Object of type 'System.String' cannot be converted to type 'System.Int32'`, which did not point to the property name).
+
 ## [3.0.1] 2022-04-20
 
 - Improve source code summaries.
@@ -14,7 +18,6 @@
 
 - Improvements in the documentation that is available on hovering over the `XMapper` class or its methods.
 - Better error messages.
-
 
 ## [2.0.0] 2022-04-14
 
