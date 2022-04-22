@@ -68,7 +68,7 @@ mapper.Map(d1, d2);
 ```
 
 ### Map enumerable members to another target type
-From Array to Array with other reference type elements:
+From Array to Array with differently reference-typed elements:
 ```csharp
 var d1Xd2 = new XMapper<Dummy1, Dummy2>(PropertyList.Source);
 var mapper = new XMapper<DummyA, DummyB>(PropertyList.Source)
@@ -82,7 +82,7 @@ var mapper = new XMapper<DummyA, DummyB>(PropertyList.Source)
     .IncludeAction((source, target) => target.XIntList = source.XIntArray?.ToList());
 ```
 
-### Map non-enumerable reference type members to another target type
+### Map non-enumerable reference-typed members to another target type
 ```csharp
 var dummyA = new DummyA
 {
@@ -112,7 +112,7 @@ var dummyB = mapper.Map(dummyA);
 var dummy2 = dummyB.Dummy2Property;
 ```
 
-### Map just a few properties from a reference typed member
+### Map just a few properties from a reference-typed member
 ```csharp
 var dummyA = new DummyA
 {
