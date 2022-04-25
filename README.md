@@ -30,7 +30,7 @@ using XMapper;
 ```csharp
 var dummy1 = new Dummy1
 {
-    MyString = "All members with the same name and type can be copied automatically...",
+    MyString = "All properties with the same name and type can be copied automatically...",
     MyIntArray = new [] { 2, 3, 5 },
     MyObjectList = new List<MyObject> { new MyObject { Hello = "...even a list of objects!" }, new MyObject() },
 };
