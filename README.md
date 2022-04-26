@@ -27,6 +27,7 @@ using XMapper;
 ```
 
 ### Map to new
+A single object:
 ```csharp
 var dummy1 = new Dummy1
 {
@@ -38,6 +39,12 @@ var dummy1 = new Dummy1
 var mapper = new XMapper<Dummy1, Dummy2>(PropertyList.Source);
 
 var dummy2 = mapper.Map(dummy1);
+```
+A list of objects:
+```csharp
+var list1 = new List<Dummy1> { new Dummy1(), new Dummy1() };
+var mapper = new XMapper<Dummy1, Dummy2>(PropertyList.Source);
+var list2 = list1.Select(x => mapper.Map(x)).ToList();
 ```
 
 ### Map to exising
@@ -60,7 +67,7 @@ var mapper = new XMapper<Dummy1, Dummy2>(PropertyList.Source)
     .IgnoreSourceProperty(x => x.Number)
     .IncludeAction((source, target) =>
     {
-        if (target.MyInt != "An important value")
+        if (target.MyInt != AN_IMPORTANT_VALUE)
         {
             target.MyInt = source.Number * 10);
         }
