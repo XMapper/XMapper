@@ -1,3 +1,4 @@
+![Nuget](https://img.shields.io/nuget/dt/XMapper)
 # XMapper
 
 The object-to-object mapper for C# that can be setup in a readable one-liner. No Attributes, no configuration - just write intuitive and safe code that works immediately.
